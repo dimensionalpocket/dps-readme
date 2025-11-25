@@ -1,6 +1,8 @@
+# DPS - "Dimensional Pocket Site"
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-The foundational service ecosystem powering all Dimensional Pocket studio projects. DPS (Dimensional Pocket Site) provides the core infrastructure—authentication, logging, metrics, and email—that enables rapid development of secure, self-hosted web applications across our portfolio.
+The foundational service ecosystem powering all Dimensional Pocket studio projects. DPS provides the core infrastructure—authentication, logging, metrics, and email—that enables rapid development of secure, self-hosted web applications across our portfolio.
 
 ## 🏁 Current Progress
 

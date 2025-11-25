@@ -8,14 +8,14 @@
 
 ## 🏁 Current Progress
 
-> Legend: ⚫ Not started — 🟡 In progress — 🟢 Initial release — 🟣 1.0
+> Legend: ⚫ Not started — 🟡 In progress — 🟢 0.x — 🟣 1.0
 
 - 🟢 [DpsConfig](https://github.com/dimensionalpocket/dps-config-rs) (Rust)
 - 🟢 [DpsAuthSession](https://github.com/dimensionalpocket/dps-auth-session-rs) (Rust)
 - 🟡 [DpsAuthApi](https://github.com/dimensionalpocket/dps-auth-api) (Rust)
 - ⚫ DpsConfig (Bun)
 - ⚫ DpsClient (Bun)
-- ⚫ DpsAuthWeb (Bun/Vue)
+- 🟡 DpsAuthWeb (Bun/Vue)
 - ⚫ DpsClient (Rust)
 - ⚫ DpsLogsApi (Rust)
 - ⚫ DpsMetricsApi (Rust)
@@ -57,18 +57,18 @@ other.api.mysite.com           # Your other website API, etc
 
 The domain structure enables secure cookie sharing using first-party cookies:
 
-- **API cookies**: Set for `.api.mysite.com` domain
-- **Automatic sharing**: Available to all API subdomains without extra code
-- **Isolation**: Cookies are NOT sent to non-API subdomains (e.g., `assets.mysite.com`)
+- **Cookies**: Set for global `.mysite.com` domain with `/api` path
+- **Automatic sharing**: Available to all web apps under the global domain without extra code
+- **Isolation**: Cookies are not sent to requests without the `/api` path (e.g., `assets.mysite.com/images/...`)
 - **Browser-native**: Leverages natural browser cookie behavior
 
 ## 📋 Requirements
 
 To use DPS, you need:
 
-1. **A domain** (e.g., `mysite.com`)
-2. **API subdomain structure** (e.g., `*.api.mysite.com`) with all APIs hosted on their own subdomains 
-3. **Development stack**: Rust or JavaScript for your main site
+1. **A domain** (e.g., `mysite.com`): all apps must run under this domain for first-party cookie access
+2. **API /path structure** (e.g., `myapi.mysite.com/api/graphql`) if they require session cookie access
+3. **Development stack**: any language for your apps; Rust or JavaScript if you want to use existing components
 
 ## 🚀 Services
 
@@ -85,7 +85,7 @@ To use DPS, you need:
   - OAuth integration
   - One-Time Password (OTP) support
 
-#### DpsAuthWeb
+#### [DpsAuthWeb](https://github.com/dimensionalpocket/dps-auth-web)
 - **Technology**: Bun + Vue.js
 - **Domain**: `account.mysite.com` (customizable prefix)
 - **Features**:
@@ -95,6 +95,7 @@ To use DPS, you need:
   - Password recovery flows
   - OAuth authentication flows
   - OTP configuration
+  - (If Email services enabled) Manage user email addresses
 
 ### Monitoring Services
 

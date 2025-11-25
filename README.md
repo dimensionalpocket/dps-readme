@@ -1,10 +1,6 @@
-# DPS - "Dimensional Pocket Site"
-
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**A comprehensive ecosystem of deployable services for dynamic website development**
-
-"DPS" is a collection of robust, open-source services and components that work together to provide essential functionality for dynamic websites. Instead of relying on third-party services, DPS offers self-hosted solutions that are common for dynamic websites, such as user management, logging, metrics, and email dispatching.
+The foundational service ecosystem powering all Dimensional Pocket studio projects. DPS (Dimensional Pocket Site) provides the core infrastructure—authentication, logging, metrics, and email—that enables rapid development of secure, self-hosted web applications across our portfolio.
 
 ## 🏁 Current Progress
 
@@ -15,7 +11,7 @@
 - 🟡 [DpsAuthApi](https://github.com/dimensionalpocket/dps-auth-api) (Rust)
 - ⚫ DpsConfig (Bun)
 - ⚫ DpsClient (Bun)
-- 🟡 DpsAuthWeb (Bun/Vue)
+- 🟡 [DpsAuthWeb](https://github.com/dimensionalpocket/dps-auth-web) (Bun/Vue)
 - ⚫ DpsClient (Rust)
 - ⚫ DpsLogsApi (Rust)
 - ⚫ DpsMetricsApi (Rust)
@@ -37,37 +33,42 @@ DPS uses an opinionated domain structure designed for security and modularity:
 
 ```
 mysite.com                     # Your main website
-console.mysite.com             # Your main website console, admin, etc
+console.mysite.com             # Your main website console
 
 account.mysite.com             # (DpsAuthWeb) User authentication and management interface for all site users
 monitor.mysite.com             # (DpsMonitorWeb) Monitoring dashboard for site admins
 mailer.mysite.com              # (DpsMailerWeb) Email management interface for site admins
 
-auth.api.mysite.com            # (DpsAuthApi) Authentication API
-logs.api.mysite.com            # (DpsLogsApi) Logging API
-metrics.api.mysite.com         # (DpsMetricsApi) Metrics API
-mailer.api.mysite.com          # (DpsMailerApi) Email API
+auth.mysite.com/api            # (DpsAuthApi) Authentication API
+logs.mysite.com/api            # (DpsLogsApi) Logging API
+metrics.mysite.com/api         # (DpsMetricsApi) Metrics API
+mailer.mysite.com/api          # (DpsMailerApi) Email API
 
-# Create your APIs under the .api subdomain so that they share first-party cookies
-main.api.mysite.com            # Your main website API
-other.api.mysite.com           # Your other website API, etc
+# APIs can be on any subdomain, just need customizable path (default /api) for cookie access
+main.api.mysite.com/api        # Your main website API
+other.mysite.com/api           # Your other website API
 ```
 
 ### Security Architecture
 
 The domain structure enables secure cookie sharing using first-party cookies:
 
-- **Cookies**: Set for global `.mysite.com` domain with `/api` path
+- **Cookies**: Set for global `.mysite.com` domain with customizable path (default /api)
 - **Automatic sharing**: Available to all web apps under the global domain without extra code
-- **Isolation**: Cookies are not sent to requests without the `/api` path (e.g., `assets.mysite.com/images/...`)
+- **Isolation**: Cookies are not sent to requests without the customizable path (default `/api`) (e.g., `assets.mysite.com/images/...`)
+- **Flexible subdomains**: Any subdomain under `.mysite.com` can host APIs with the customizable path and receive cookies
 - **Browser-native**: Leverages natural browser cookie behavior
+
+### Explanation
+
+This architecture ensures cookies remain fully first-party to avoid browser blocking. Setting cookies to a specific subdomain (like `.api.mysite.com`) would fail when frontend apps run on different subdomains (like `www.mysite.com`), as browsers reject cookies from APIs that don't match the frontend's subdomain. By using the global `.mysite.com` domain with path-based isolation, any frontend subdomain can set and receive cookies while the customizable path restriction ensures cookies are only sent to API endpoints, not to static assets or other non-API requests.
 
 ## 📋 Requirements
 
 To use DPS, you need:
 
 1. **A domain** (e.g., `mysite.com`): all apps must run under this domain for first-party cookie access
-2. **API /path structure** (e.g., `myapi.mysite.com/api/graphql`) if they require session cookie access
+2. **API /path structure** (e.g., `myapi.mysite.com/api/graphql`, path customizable) if they require session cookie access
 3. **Development stack**: any language for your apps; Rust or JavaScript if you want to use existing components
 
 ## 🚀 Services
@@ -76,7 +77,7 @@ To use DPS, you need:
 
 #### [DpsAuthApi](https://github.com/dimensionalpocket/dps-auth-api)
 - **Technology**: Rust + SQLite + GraphQL
-- **Domain**: `auth.api.mysite.com` (customizable prefix)
+- **Domain**: `auth.mysite.com/api` (customizable subdomain and path)
 - **Features**:
   - User sign-up and log-in
   - Password recovery
@@ -87,7 +88,7 @@ To use DPS, you need:
 
 #### [DpsAuthWeb](https://github.com/dimensionalpocket/dps-auth-web)
 - **Technology**: Bun + Vue.js
-- **Domain**: `account.mysite.com` (customizable prefix)
+- **Domain**: `account.mysite.com` (customizable subdomain)
 - **Features**:
   - User sign-up, login, and logout interfaces
   - User profile management
@@ -101,7 +102,7 @@ To use DPS, you need:
 
 #### DpsLogsApi
 - **Technology**: Rust + SQLite + GraphQL
-- **Domain**: `logs.api.mysite.com` (customizable prefix)
+- **Domain**: `logs.mysite.com/api` (customizable subdomain and path)
 - **Features**:
   - Log ingestion and storage
   - Authentication via Auth layer
@@ -109,7 +110,7 @@ To use DPS, you need:
 
 #### DpsMetricsApi
 - **Technology**: Rust + SQLite + GraphQL
-- **Domain**: `metrics.api.mysite.com` (customizable prefix)
+- **Domain**: `metrics.mysite.com/api` (customizable subdomain and path)
 - **Features**:
   - Metrics ingestion and storage
   - Data parsing and analysis
@@ -117,7 +118,7 @@ To use DPS, you need:
 
 #### DpsMonitorWeb
 - **Technology**: Bun + Vue.js
-- **Domain**: `monitor.mysite.com` (customizable prefix)
+- **Domain**: `monitor.mysite.com` (customizable subdomain)
 - **Features**:
   - Log search and filtering
   - Metrics dashboards
@@ -128,7 +129,7 @@ To use DPS, you need:
 
 #### DpsMailerApi
 - **Technology**: Rust + SQLite + GraphQL
-- **Domain**: `mailer.api.mysite.com` (customizable prefix)
+- **Domain**: `mailer.mysite.com/api` (customizable subdomain and path)
 - **Features**:
   - Email management
   - Email payload ingestion
@@ -138,7 +139,7 @@ To use DPS, you need:
 
 #### DpsMailerWeb
 - **Technology**: Bun + Vue.js
-- **Domain**: `mailer.mysite.com` (customizable prefix)
+- **Domain**: `mailer.mysite.com` (customizable subdomain)
 - **Features**:
   - Email delivery monitoring
   - Email management interface
